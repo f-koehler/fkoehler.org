@@ -1,5 +1,8 @@
 #!/usr/bin/python
 import sys
+import logging
+import os.path
+import shutil
 import website.config
 import website.build
 
@@ -30,6 +33,8 @@ if __name__ == "__main__":
         usage()
         exit(1)
 
+    logging.basicConfig(level=logging.INFO)
+
     if cmd == "build":
         website.build.update()
         exit(0)
@@ -38,4 +43,6 @@ if __name__ == "__main__":
         exit(0)
 
     if cmd == "clean":
+        if os.path.exists(website.config.build_dir):
+            shutil.rmtree(website.config.build_dir)
         exit(0)

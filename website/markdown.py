@@ -8,7 +8,7 @@ class Renderer(mistune.Renderer):
         if not lang:
             return "\n<pre><code>{}</pre></code>".format(mistune.excape(code))
         lexer = pygments.lexers.get_lexer_by_name(lang)
-        formatter = pygmetns.formatters.HtmlFormatter()
+        formatter = pygments.formatters.HtmlFormatter()
         return pygments.highlight(code, lexer, formatter)
 
 renderer = Renderer()
