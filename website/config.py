@@ -1,5 +1,5 @@
 build_dir = "build"
-search_paths = ["computer"]
+css_files = ["normalize.css"]
 extra_files = ["index.md", "404.md"]
 preview_port = 8888
-css_files = ["normalize.css"]
+search_paths = ["computer"]

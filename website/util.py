@@ -1,7 +1,7 @@
-import os
-import os.path
 import datetime
 import dateutil.tz
+import os
+import os.path
 
 
 # TODO: create css only if one file updated

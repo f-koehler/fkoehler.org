@@ -1,7 +1,7 @@
 import mistune
 import pygments
-import pygments.lexers
 import pygments.formatters
+import pygments.lexers
 
 
 class Renderer(mistune.Renderer):

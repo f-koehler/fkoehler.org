@@ -1,10 +1,10 @@
-import os.path
-import logging
-import shutil
 import jinja2
-import website.util
+import logging
+import os.path
+import shutil
 import website.config
 import website.markdown
+import website.util
 
 env_jinja2 = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"))
 

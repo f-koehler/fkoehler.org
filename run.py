@@ -1,10 +1,12 @@
 #!/usr/bin/python
-import sys
+import http.server
 import logging
+import os
 import os.path
 import shutil
-import website.config
+import sys
 import website.build
+import website.config
 
 
 def usage():
@@ -17,6 +19,14 @@ def usage():
         "  clean\t\tdeletes the build dir \"{}\"\n"
     ).format(website.config.preview_port, website.config.build_dir)
     print(msg, file=sys.stderr)
+
+
+def preview():
+    os.chdir(website.config.build_dir)
+    address = ('', 8888)
+    handler = http.server.SimpleHTTPRequestHandler
+    server = http.server.HTTPServer(address, handler)
+    server.serve_forever()
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
@@ -41,6 +51,7 @@ if __name__ == "__main__":
         exit(0)
 
     if cmd == "preview":
+        preview()
         exit(0)
 
     if cmd == "clean":
