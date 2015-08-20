@@ -1,4 +1,4 @@
-build_dir    = "build"
+build_dir = "build"
 search_paths = ["computer"]
-extra_files  = []
+extra_files = []
 preview_port = 8888

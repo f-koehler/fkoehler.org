@@ -8,14 +8,16 @@ import website.markdown
 
 env_jinja2 = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"))
 
+
 def discover(path):
     logging.info("Started discovery in \"{}\"".format(path))
     all_dirs, all_files = website.util.list_all(path)
     md_files, other_files = website.util.filter_ext(all_files, ".md")
-    
+
     md_updates = []
     for md in md_files:
-        dst = website.util.change_ext(os.path.join(website.config.build_dir, md), ".html")
+        p = os.path.join(website.config.build_dir, md)
+        dst = website.util.change_ext(p, ".html")
         if website.util.file_needs_update(md, dst):
             logging.info("Page {} needs update".format(dst))
             md_updates.append((md, dst))
@@ -33,6 +35,7 @@ def discover(path):
 
     return (all_dirs, md_updates, other_updates)
 
+
 def create_dirs(dirs):
     for d in dirs:
         p = os.path.join(website.config.build_dir, d)
@@ -41,6 +44,7 @@ def create_dirs(dirs):
             os.mkdir(p)
         else:
             logging.info("Skip existing directory \"{}\"".format(p))
+
 
 def render_pages(updates):
     for u in updates:
@@ -51,10 +55,12 @@ def render_pages(updates):
                 var["content"] = website.markdown.markdown(i.read())
                 o.write(env_jinja2.get_template("page.html").render(var))
 
+
 def copy_files(updates):
     for u in updates:
         logging.info("Copy file {} -> {}".format(u[0], u[1]))
         shutil.copy2(u[0], u[1])
+
 
 def update():
     logging.info("Start update")

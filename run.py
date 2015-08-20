@@ -6,6 +6,7 @@ import shutil
 import website.config
 import website.build
 
+
 def usage():
     msg = (
         "usage: ./run.py <command>\n\n"
@@ -24,7 +25,7 @@ if __name__ == "__main__":
         exit(1)
 
     cmd = sys.argv[1]
-    if not cmd  in ["help", "build", "preview", "clean"]:
+    if cmd not in ["help", "build", "preview", "clean"]:
         print("Error: Unknown command \""+cmd+"\"!", file=sys.stderr)
         usage()
         exit(1)

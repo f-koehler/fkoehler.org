@@ -3,6 +3,7 @@ import pygments
 import pygments.lexers
 import pygments.formatters
 
+
 class Renderer(mistune.Renderer):
     def block_code(self, code, lang):
         if not lang:
