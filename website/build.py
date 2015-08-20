@@ -78,4 +78,19 @@ def update():
         render_pages(mds)
         copy_files(files)
 
+    extra_pages = []
+    extra_updates = []
+    for f in website.config.extra_files:
+        dst = os.path.join(website.config.build_dir, f)
+        _, ext = os.path.splitext(f)
+        if ext == ".md":
+            dst = website.util.change_ext(dst, ".html")
+            if website.util.file_needs_update(f, dst):
+                extra_pages.append((f, dst))
+        else:
+            if website.util.file_needs_update(f, dst):
+                extra_updates.append((f, dst))
+    render_pages(extra_pages)
+    copy_files(extra_updates)
+
     logging.info("Done!")
