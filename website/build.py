@@ -62,6 +62,15 @@ def copy_files(updates):
         shutil.copy2(u[0], u[1])
 
 
+def create_css():
+    css = ""
+    for c in website.config.css_files:
+        with open(os.path.join("css", c)) as f:
+            css += f.read()
+    with open(os.path.join(website.config.build_dir, "page.css"), "w") as f:
+        f.write(css)
+
+
 def update():
     logging.info("Start update")
     if not os.path.exists(website.config.build_dir):
@@ -92,5 +101,7 @@ def update():
                 extra_updates.append((f, dst))
     render_pages(extra_pages)
     copy_files(extra_updates)
+
+    create_css()
 
     logging.info("Done!")

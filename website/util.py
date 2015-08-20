@@ -4,6 +4,10 @@ import datetime
 import dateutil.tz
 
 
+# TODO: create css only if one file updated
+# TODO: rebuild pages if template changed
+
+
 def now():
     return datetime.datetime.now(dateutil.tz.tzlocal())
 
