@@ -26,6 +26,11 @@ def extract_meta_data(markdown):
     return (meta, markdown)
 
 
+def pygments_css(style):
+    formatter = pygments.formatters.HtmlFormatter(style=style)
+    return formatter.get_style_defs(".highlight")
+
+
 class Renderer(mistune.Renderer):
     def block_code(self, code, lang):
         if not lang:
