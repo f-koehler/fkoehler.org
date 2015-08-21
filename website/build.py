@@ -51,8 +51,11 @@ def render_pages(updates):
         logging.info("Render page {} -> {}".format(u[0], u[1]))
         with open(u[0]) as i:
             with open(u[1], "w") as o:
-                var = {}
-                var["content"] = website.markdown.markdown(i.read())
+                md = i.read()
+                var, md = website.markdown.extract_meta_data(md)
+                if var is None:
+                    var = {}
+                var["content"] = website.markdown.markdown(md)
                 o.write(env_jinja2.get_template("page.html").render(var))
 
 
