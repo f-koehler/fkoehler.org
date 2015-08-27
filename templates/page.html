@@ -9,6 +9,13 @@
     <link rel="stylesheet" href="/page.css">
   </head>
   <body>
+    <nav>
+      <ul>
+        {% for page_dir in page_dirs %}
+        <li><a href="fkoehler.org/{{ page_dir }}">{{ page_dir }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
     {{ content }}
   </body>
 </html>

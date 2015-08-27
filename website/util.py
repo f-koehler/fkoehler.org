@@ -9,10 +9,23 @@ import os.path
 
 
 def now():
+    """
+    Return the current time (in the local time zone).
+
+    :returns: The current time.
+    :rtype: datetime
+    """
     return datetime.datetime.now(dateutil.tz.tzlocal())
 
 
 def time_rfc822(dt=now()):
+    """
+    Format a datetime object to a RFC 822 compatible string
+
+    :param datetime dt: The datetime object to format.
+    :returns: A RFC 822 compatible string
+    :rtype: str
+    """
     return dt.strftime("%d %b %Y %H:%M %z")
 
 
