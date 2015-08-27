@@ -34,8 +34,11 @@ def page_jobs(path):
 
 
 def css_job():
-    css_files = [f for f in os.listdir("css") if os.path.isfile(os.path.join("css", f))]
-    return [website.job.CssJob(css_files, os.path.join(website.config.build_dir, "page.css"))]
+    j = website.job.CssJob(
+        [os.path.join("css", f) for f in website.config.css_files],
+        os.path.join(website.config.build_dir, "page.css")
+    )
+    return j.generate_required_jobs()+[j]
 
 
 def run():
@@ -44,5 +47,6 @@ def run():
     for p in website.config.search_paths:
         jobs += page_jobs(p)
 
+    print(jobs)
     for j in jobs:
         j.run()

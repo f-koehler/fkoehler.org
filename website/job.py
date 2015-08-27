@@ -76,14 +76,14 @@ class FileJob(Job):
 
     def up_to_date(self):
         if not os.path.exists(self.dst):
-            return True
+            return False
 
-        if isinstance(str, self.src):
+        if isinstance(self.src, str):
             if not os.path.exists(self.src):
                 # TODO: raise exception
                 return
             return self.file_up_to_date(self.src, self.dst)
-        elif isinstance(list, self.src):
+        elif isinstance(self.src, list):
             for s in self.src:
                 if not os.path.exists(s):
                     # TODO: raise exception
@@ -133,5 +133,5 @@ class CssJob(FileJob):
         for s in self.src:
             with open(s) as f:
                 css += f.read()
-        with open(self.dst) as f:
+        with open(self.dst, "w") as f:
             f.write(css)

@@ -2,15 +2,8 @@
 title: fkoehler.org
 ---
 
-Hi, my name is Fabian Köhler.
 
-~~~ c++
+Social
+------
 
-#include <iostream>
-
-int main(int argc, char* argv[]) {
-    std::cout << "Hello World!" << endl;
-    return 0;
-}
-
-~~~
+[GitHub](https://github.com/f-koehler)

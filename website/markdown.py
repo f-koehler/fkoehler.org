@@ -70,6 +70,7 @@ class PageJob(website.job.FileJob):
         if not var:
             var = {}
         var["content"] = markdown(md)
+        var["page_dirs"] = website.config.search_paths
 
         with open(self.dst, "w") as f:
             f.write(template_env.get_template("page.html").render(var))

@@ -1,0 +1,7 @@
+.nav-list {
+  list-style-type: none;
+}
+
+.nav-item {
+  display: inline;
+}
