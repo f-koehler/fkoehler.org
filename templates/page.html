@@ -7,15 +7,22 @@
     <meta name="keywords" content="{{ keywords }}">
     <meta name="author" content="{{ author }}">
     <link rel="stylesheet" href="/page.css">
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
   </head>
   <body>
     <nav>
       <ul class="nav-list">
-        {% for page_dir in page_dirs %}
-        <li class="nav-item"><a href="fkoehler.org/{{ page_dir }}">{{ page_dir }}</a></li>
+        {% for href, caption in menu_items %}
+        <li class="nav-item"><a href="{{ href }}">{{ caption }}</a></li>
         {% endfor %}
       </ul>
     </nav>
-    {{ content }}
+    <main>
+      <header>
+        <h1>{{ title }}</h1>
+      </header>
+      {{ content }}
+    </main>
   </body>
 </html>

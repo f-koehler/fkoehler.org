@@ -1,0 +1,12 @@
+{% extends "page.html" %}
+{% block content %}
+
+{{ super() }}
+
+<ol>
+  {% for title, date, brief in pages %}
+    <li>{{ title }}</li>
+  {% endfor %}
+</ol>
+
+{% endblock content %}

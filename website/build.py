@@ -3,7 +3,7 @@ import os.path
 
 import website.config
 import website.job
-import website.markdown
+import website.page
 
 
 def extra_jobs():
@@ -13,7 +13,7 @@ def extra_jobs():
         if ext == ".md":
             src = f
             dst = os.path.join(website.config.build_dir, base+".html")
-            j = website.markdown.PageJob(src, dst)
+            j = website.page.PageJob(src, dst)
             req = j.generate_required_jobs()
             jobs += req+[j]
     return jobs
@@ -21,15 +21,22 @@ def extra_jobs():
 
 def page_jobs(path):
     jobs = []
+    index_page = os.path.join(path, "index.md")
     for root, _, files in os.walk(path):
         for f in files:
             base, ext = os.path.splitext(f)
             if ext == ".md":
                 src = os.path.join(root, f)
+                if src == index_page:
+                    continue
                 dst = os.path.join(website.config.build_dir, root, base+".html")
-                j = website.markdown.PageJob(src, dst)
+                j = website.page.PageJob(src, dst)
                 req = j.generate_required_jobs()
                 jobs += req+[j]
+    if os.path.exists(index_page):
+        dst = os.path.join(website.config.build_dir, index_page)
+        j = website.page.PageJob(index_page, dst)
+        j.template_name = "pagelist.html"
     return jobs
 
 
@@ -47,6 +54,5 @@ def run():
     for p in website.config.search_paths:
         jobs += page_jobs(p)
 
-    print(jobs)
     for j in jobs:
         j.run()
