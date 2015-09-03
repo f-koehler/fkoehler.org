@@ -1,42 +1,30 @@
 import os
 import os.path
 import shutil
+import jinja2
+
+import website.markdown
+
+
+template_env = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"))
+
+
+def file_up_to_date(self, src, dst):
+    return os.path.getmtime(src) > os.path.getmtime(dst)
 
 
 class Job(object):
-    """
-    Base class for all jobs
-    """
-
     def up_to_date(self):
-        """
-        This method checks whether the job is up-to-date or not.
-
-        :returns: True if job is up-to-date.
-        :rtype: bool
-        """
         pass
 
-    """
-    Return a list of jobs required by this job.
-
-    :rtype: list
-    """
     def generate_required_jobs(self):
         return []
 
-    """
-    Run the job.
-    """
     def run(self):
         pass
 
 
 class DirCreationJob(Job):
-    """
-    Job class for directory creation
-    """
-
     directory = ""
 
     def __init__(self, directory):
@@ -57,10 +45,6 @@ class DirCreationJob(Job):
 
 
 class FileJob(Job):
-    """
-    Job class for file operations
-    """
-
     src = ""
     dst = ""
 
@@ -70,9 +54,6 @@ class FileJob(Job):
 
     def __repr__(self):
         return "file: {} => {}".format(self.src, self.dst)
-
-    def file_up_to_date(self, src, dst):
-        return os.path.getmtime(src) > os.path.getmtime(dst)
 
     def up_to_date(self):
         if not os.path.exists(self.dst):
@@ -104,9 +85,6 @@ class FileJob(Job):
 
 
 class FileCopyJob(FileJob):
-    """
-    Job to copy file
-    """
     def __repr__(self):
         return "cp: {} => {}".format(self.src, self.dst)
 
@@ -117,9 +95,6 @@ class FileCopyJob(FileJob):
 
 
 class CssJob(FileJob):
-    """
-    Job to concatenate css files into one file
-    """
     def __repr__(self):
         return "css: {} => {}".format(self.src, self.dst)
 
@@ -135,3 +110,43 @@ class CssJob(FileJob):
                 css += f.read()
         with open(self.dst, "w") as f:
             f.write(css)
+
+
+class PageJob(Job):
+    def __init__(self, src, dst, template_name="page.html"):
+        self.src = src
+        self.dst = dst
+        self.template_name = template_name
+        with open(self.src) as f:
+            self.meta, self.md = website.markdown.renderer.extract_meta_data(f.read())
+        if not self.meta:
+            self.meta = dict()
+
+    def __repr__(self):
+        path = os.path.join("templates", self.template_name)
+        return "md:  {} + {} => {}".format(self.src, path, self.dst)
+
+    def up_to_date(self):
+        if not os.path.exists(self.dst):
+            return False
+
+        if not file_up_to_date(self.src, self.dst):
+            return False
+
+        path = os.path.join("templates", self.template_name)
+        if not file_up_to_date(path, self.dst):
+            return False
+
+        return True
+
+    def generate_required_jobs(self):
+        return [DirCreationJob(os.path.dirname(self.dst))]
+
+    def run(self):
+        var = self.meta
+        if not var:
+            var = dict()
+        var["content"] = website.markdown.markdown(self.md)
+        var["menu_items"] = website.config.menu_items
+        with open(self.dst, "w") as f:
+            f.write(template_env.get_template(self.template_name).render(var))
