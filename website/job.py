@@ -53,7 +53,7 @@ class FileJob(Job):
         self.dst = dst
 
     def __repr__(self):
-        return "file: {} => {}".format(self.src, self.dst)
+        return "file:  {} => {}".format(self.src, self.dst)
 
     def up_to_date(self):
         if not os.path.exists(self.dst):
@@ -86,7 +86,7 @@ class FileJob(Job):
 
 class FileCopyJob(FileJob):
     def __repr__(self):
-        return "cp: {} => {}".format(self.src, self.dst)
+        return "copy:  {} => {}".format(self.src, self.dst)
 
     def run(self):
         if self.up_to_date():
@@ -96,7 +96,7 @@ class FileCopyJob(FileJob):
 
 class CssJob(FileJob):
     def __repr__(self):
-        return "css: {} => {}".format(self.src, self.dst)
+        return "css:   {} => {}".format(self.src, self.dst)
 
     def run(self):
         if self.up_to_date():
@@ -124,7 +124,7 @@ class PageJob(Job):
 
     def __repr__(self):
         path = os.path.join("templates", self.template_name)
-        return "md:  {} + {} => {}".format(self.src, path, self.dst)
+        return "md:    {} + {} => {}".format(self.src, path, self.dst)
 
     def up_to_date(self):
         if not os.path.exists(self.dst):

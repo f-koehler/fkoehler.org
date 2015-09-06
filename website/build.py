@@ -1,8 +1,21 @@
+import logging
 import os
 import os.path
 
 import website.config
 import website.job
+
+
+def log_add_job(job):
+    logging.info("Add: {}".format(job))
+
+def log_add_jobs(jobs):
+    for j in jobs:
+        logging.info("Add: {}".format(j))
+
+
+def log_run_job(job):
+    logging.info("Run: {}".format(job))
 
 
 def extra_jobs():
@@ -13,7 +26,9 @@ def extra_jobs():
             src = f
             dst = os.path.join(website.config.build_dir, base+".html")
             j = website.job.PageJob(src, dst, "page.html")
+            log_add_job(j)
             req = j.generate_required_jobs()
+            log_add_jobs(req)
             jobs += req+[j]
     return jobs
 
@@ -42,8 +57,10 @@ def page_jobs(path):
                     if "brief" in j.meta:
                         brief = j.meta["brief"]
                     items.append(("todo", title, date, brief))
-                jobs += j.generate_required_jobs()
-                jobs.append(j)
+                log_add_job(j)
+                req = j.generate_required_jobs()
+                log_add_jobs(req)
+                jobs += req+[j]
     base, ext = os.path.splitext(index_page)
     j = website.job.PageJob(index_page, os.path.join(website.config.build_dir, base+".html"), "pagelist.html")
     j.meta["pages"] = items
@@ -55,6 +72,7 @@ def css_job():
         [os.path.join("css", f) for f in website.config.css_files],
         os.path.join(website.config.build_dir, "page.css")
     )
+    log_add_job(j)
     return j.generate_required_jobs()+[j]
 
 
@@ -65,4 +83,5 @@ def run():
         jobs += page_jobs(p)
 
     for j in jobs:
+        log_run_job(j)
         j.run()
