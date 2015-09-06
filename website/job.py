@@ -9,7 +9,7 @@ import website.markdown
 template_env = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"))
 
 
-def file_up_to_date(self, src, dst):
+def file_up_to_date(src, dst):
     return os.path.getmtime(src) > os.path.getmtime(dst)
 
 
@@ -63,13 +63,13 @@ class FileJob(Job):
             if not os.path.exists(self.src):
                 # TODO: raise exception
                 return
-            return self.file_up_to_date(self.src, self.dst)
+            return file_up_to_date(self.src, self.dst)
         elif isinstance(self.src, list):
             for s in self.src:
                 if not os.path.exists(s):
                     # TODO: raise exception
                     return
-                if self.file_up_to_date(s, self.dst):
+                if file_up_to_date(s, self.dst):
                     return False
             return True
         else:
