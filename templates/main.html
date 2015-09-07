@@ -7,10 +7,15 @@
     <meta name="keywords" content="{{ keywords }}">
     <meta name="author" content="{{ author }}">
     <link rel="stylesheet" href="/page.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   </head>
   <body>
     <nav>
+      <div class="nav-head">
+        <a href="/">fkoehler's blog</a>
+        <a href="https://github.com/f-koehler/"><i class="fa fa-github"></i></a>
+      </div>
       <ul class="nav-list">
         {% for href, caption in menu_items %}
         <li class="nav-item"><a href="{{ href }}" class="btn btn-nav">{{ caption }}</a></li>

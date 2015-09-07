@@ -1,3 +1,13 @@
+.nav-head a {
+  text-decoration: none;
+  color: #FFFFFF;
+  font-size: xx-large;
+}
+
+nav {
+  background-color: #004B7F;
+}
+
 .nav-list {
   list-style-type: none;
   margin: 0;

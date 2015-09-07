@@ -1,0 +1,18 @@
+body {
+  background-color: #232D35;
+  color: #FFFFFF;
+}
+
+div.highlight {
+  border-radius: 3px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div.highlight pre {
+  display: block;
+  white-space: pre;
+  padding: 5px;
+  margin: 0px;
+}
