@@ -5,5 +5,5 @@ preview_port = 8888
 search_paths = ["computer"]
 
 menu_items = [
-    ("computer", "Computer"),
+    ("/computer", "Computer"),
 ]

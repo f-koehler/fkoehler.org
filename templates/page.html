@@ -1,27 +1,6 @@
-<!DOCTYPE html>
-<html lange="en">
-  <head>
-    <title>{{ title }}</title>
-    <meta charset="utf-8">
-    <meta name="description" content="{{ description }}">
-    <meta name="keywords" content="{{ keywords }}">
-    <meta name="author" content="{{ author }}">
-    <link rel="stylesheet" href="/page.css">
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  </head>
-  <body>
-    <nav>
-      <ul class="nav-list">
-        {% for href, caption in menu_items %}
-        <li class="nav-item"><a href="{{ href }}">{{ caption }}</a></li>
-        {% endfor %}
-      </ul>
-    </nav>
-    <main>
-      <header>
-        <h1>{{ title }}</h1>
-      </header>
-      {{ content }}
-    </main>
-  </body>
-</html>
+{% extends "main.html" %}
+{% block main %}
+
+{{ content }}
+
+{% endblock main %}

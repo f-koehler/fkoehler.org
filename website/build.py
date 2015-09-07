@@ -9,6 +9,7 @@ import website.job
 def log_add_job(job):
     logging.info("Add: {}".format(job))
 
+
 def log_add_jobs(jobs):
     for j in jobs:
         logging.info("Add: {}".format(j))
@@ -54,9 +55,9 @@ def page_jobs(path):
                     if "date" in j.meta:
                         date = j.meta["date"]
                     brief = "undefined"
-                    if "brief" in j.meta:
-                        brief = j.meta["brief"]
-                    items.append(("todo", title, date, brief))
+                    if "abstract" in j.meta:
+                        brief = j.meta["abstract"]
+                    items.append(("/"+base+".html", title, date, brief))
                 log_add_job(j)
                 req = j.generate_required_jobs()
                 log_add_jobs(req)

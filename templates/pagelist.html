@@ -1,12 +1,17 @@
-{% extends "page.html" %}
-{% block content %}
+{% extends "main.html" %}
+{% block main %}
 
 {{ super() }}
 
 <ol>
-  {% for link, title, date, brief in pages %}
-    <li>{{ title }}</li>
+  {% for link, title, date, abstract in pages %}
+  <li>
+    <dl>
+      <dt><a href="{{ link }}">{{ title }}</a></dt>
+      <dd>{{ abstract }}</dd>
+    </dl>
+  </li>
   {% endfor %}
 </ol>
 
-{% endblock content %}
+{% endblock main %}
