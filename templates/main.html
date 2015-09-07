@@ -3,7 +3,7 @@
   <head>
     <title>{{ title }}</title>
     <meta charset="utf-8">
-    <meta name="description" content="{{ description }}">
+    <meta name="description" content="{{ abstract }}">
     <meta name="keywords" content="{{ keywords }}">
     <meta name="author" content="{{ author }}">
     <link rel="stylesheet" href="/page.css">
@@ -13,7 +13,7 @@
     <nav>
       <ul class="nav-list">
         {% for href, caption in menu_items %}
-        <li class="nav-item"><a href="{{ href }}">{{ caption }}</a></li>
+        <li class="nav-item"><a href="{{ href }}" class="btn btn-nav">{{ caption }}</a></li>
         {% endfor %}
       </ul>
     </nav>

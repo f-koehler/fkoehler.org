@@ -2,14 +2,21 @@
 
 <rss version="2.0">
   <channel>
-    <title></title>
+    <title>{{ title }}</title>
+    <description>{{ description }}</description>
     <link>fkoehler.org/rss.xml</link>
-    <description></description>
     <language>en-us</language>
-    <copyright></copyright>
-    <pubDate></pubDate>
+    <copyright>© Fabian Köhler 2015</copyright>
+    <pubDate>Mon, 07 Oct 2015 22:41:53 +0200</pubDate>
+    <lastBuildDate>{{ date }}</lastBuildDate>
+    {% for item in rss_items %}
+    <item>
+      <title>{{ item["title"] }}</title>
+      <description>{{ item["abstract"] }}</description>
+      <link>{{ domain }}/{{ item["href"] }}</link>
+      <guid>{{ domain }}/{{ item["href"] }}</guid>
+      <pubDate>{{ item["date"] }}</pubDate>
+    </item>
+    {% endfor %}
   </channel>
-
-  <item>
-  </item>
 </rss>
