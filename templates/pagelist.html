@@ -3,7 +3,7 @@
 
 {{ super() }}
 
-<ol>
+<ul class="pagelist">
   {% for link, title, date, abstract in pages %}
   <li>
     <dl>
@@ -12,6 +12,6 @@
     </dl>
   </li>
   {% endfor %}
-</ol>
+</ul>
 
 {% endblock main %}

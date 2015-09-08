@@ -6,19 +6,34 @@
 
 nav {
   background-color: #004B7F;
+  padding: 5px;
+}
+
+nav div {
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .nav-list {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  margin-top: 7px;
+  margin-bottom: 5px;
+  font-size: large;
 }
 
 .nav-item {
   display: inline;
 }
 
-.btn {
+.btn-nav {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 3px;
   text-decoration: none;
 }
 
