@@ -11,12 +11,26 @@ regex_meta_block = re.compile(r"---+\n(?P<data>(?:.*\n)*)---+", re.MULTILINE)
 regex_meta_line = re.compile(r"(?P<key>[^\:]+)\s*\:\s*(?P<value>.+)")
 
 
-class InlineLexer(mistune.InlineLexer):
+class MathInlineMixin(object):
+    def enable_math(self):
+        self.rules.math = re.compile(r"^\$\$(?P<math>.+?)\$\$")
+        self.default_rules.insert(0, "math")
+
+    def output_math(self, m):
+        return self.renderer.math(m.groupdict()["math"])
+
+
+class InlineLexer(MathInlineMixin, mistune.InlineLexer):
     pass
 
 
 class BlockLexer(mistune.BlockLexer):
     pass
+
+
+class MathRendererMixin(object):
+    def math(self, math):
+        return "$${}$$".format(math)
 
 
 class CodeRendererMixin(object):
@@ -36,7 +50,7 @@ class CodeRendererMixin(object):
             return "\n<pre><code>{}</pre></code>".format(mistune.excape(code))
 
 
-class Renderer(CodeRendererMixin, mistune.Renderer):
+class Renderer(CodeRendererMixin, MathRendererMixin, mistune.Renderer):
     def extract_meta_data(self, markdown):
         m = regex_meta_block.match(markdown)
         if not m:
@@ -55,12 +69,13 @@ class Renderer(CodeRendererMixin, mistune.Renderer):
         return (meta, markdown)
 
 
-# def pygments_css(style):
-#     formatter = pygments.formatters.HtmlFormatter(style=style)
-#     return formatter.get_style_defs(".highlight")
+def pygments_css(style):
+    formatter = pygments.formatters.HtmlFormatter(style=style)
+    return formatter.get_style_defs(".highlight")
 
 
 renderer = Renderer()
 inline_lexer = InlineLexer(renderer)
+inline_lexer.enable_math()
 block_lexer = BlockLexer(renderer)
 markdown = mistune.Markdown(renderer, inline=inline_lexer)
