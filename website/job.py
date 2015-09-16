@@ -118,7 +118,7 @@ class PageJob(Job):
         self.dst = dst
         self.template_name = template_name
         with open(self.src) as f:
-            self.meta, self.md = website.markdown.renderer.extract_meta_data(f.read())
+            self.meta, self.md = website.markdown.extract_meta_data(f.read())
         if not self.meta:
             self.meta = dict()
 

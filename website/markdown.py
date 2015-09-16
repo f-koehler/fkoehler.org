@@ -11,71 +11,80 @@ regex_meta_block = re.compile(r"---+\n(?P<data>(?:.*\n)*)---+", re.MULTILINE)
 regex_meta_line = re.compile(r"(?P<key>[^\:]+)\s*\:\s*(?P<value>.+)")
 
 
-class MathInlineMixin(object):
-    def enable_math(self):
-        self.rules.math = re.compile(r"^\$\$(?P<math>.+?)\$\$")
-        self.default_rules.insert(0, "math")
+class InlineGrammar(mistune.InlineGrammar):
+    math = re.compile(r"^\$\$(.+?)\$\$", re.DOTALL)
+    block_math = re.compile(r"^\\\[(.+?)\\\]", re.DOTALL)
+
+
+class BlockGrammar(mistune.BlockGrammar):
+    block_math = re.compile(r"^\\\[(.+?)\\\]", re.DOTALL)
+
+
+class InlineLexer(mistune.InlineLexer):
+    default_rules = ["block_math", "math"] + mistune.InlineLexer.default_rules
+
+    def __init__(self, renderer, **kwargs):
+        rules = InlineGrammar()
+        super(InlineLexer, self).__init__(renderer, rules, **kwargs)
 
     def output_math(self, m):
-        return self.renderer.math(m.groupdict()["math"])
+        return self.renderer.inline_math(m.group(1))
 
-
-class InlineLexer(MathInlineMixin, mistune.InlineLexer):
-    pass
+    def output_block_math(self, m):
+        return self.renderer.block_math(m.group(1))
 
 
 class BlockLexer(mistune.BlockLexer):
-    pass
+    default_rules = ["block_math"] + mistune.BlockLexer.default_rules
+
+    def __init__(self, **kwargs):
+        rules = BlockGrammar()
+        super(BlockLexer, self).__init__(rules, **kwargs)
+
+    def parse_block_math(self, m):
+        self.tokens.append({
+            "type": "block_math",
+            "text": m.group(1)
+        })
 
 
-class MathRendererMixin(object):
-    def math(self, math):
-        return "$${}$$".format(math)
+class Renderer(mistune.Renderer):
+    def block_math(self, math):
+        return "\\[%s\\]" % math
+
+    def inline_math(self, math):
+        return "@@%s@@" % math
 
 
-class CodeRendererMixin(object):
-    def block_code(self, code, lang):
-        if not lang:
-            code = code.strip()
-            return "\n<pre><code>{}</pre></code>".format(mistune.escape(code))
+class Markdown(mistune.Markdown):
+    def __init__(self, **kwargs):
+        kwargs["inline"] = InlineLexer
+        kwargs["block"] = BlockLexer
+        super(Markdown, self).__init__(Renderer(), **kwargs)
 
-        linenos = self.options.get("linenos")
-
-        try:
-            lexer = pygments.lexers.get_lexer_by_name(lang, stripall=True)
-            formatter = pygments.formatters.HtmlFormatter(linenos=linenos)
-            return pygments.highlight(code, lexer, formatter)
-        except:
-            code = code.strip()
-            return "\n<pre><code>{}</pre></code>".format(mistune.excape(code))
+    def output_block_math(self):
+        return self.renderer.block_math(self.token["text"])
 
 
-class Renderer(CodeRendererMixin, MathRendererMixin, mistune.Renderer):
-    def extract_meta_data(self, markdown):
-        m = regex_meta_block.match(markdown)
+def extract_meta_data(markdown):
+    m = regex_meta_block.match(markdown)
+    if not m:
+        return (None, markdown)
+    data = m.groupdict()["data"].splitlines()
+    markdown = markdown[len(m.group(0)):]
+
+    meta = {}
+    for l in data:
+        m = regex_meta_line.match(l)
         if not m:
-            return (None, markdown)
-        data = m.groupdict()["data"].splitlines()
-        markdown = markdown[len(m.group(0)):]
-
-        meta = {}
-        for l in data:
-            m = regex_meta_line.match(l)
-            if not m:
-                # TODO: raise exception
-                continue
-            meta[m.groupdict()["key"]] = m.groupdict()["value"]
-            meta["menu_items"] = website.config.menu_items
-        return (meta, markdown)
-
-
-def pygments_css(style):
-    formatter = pygments.formatters.HtmlFormatter(style=style)
-    return formatter.get_style_defs(".highlight")
+            # TODO: raise exception
+            continue
+        meta[m.groupdict()["key"]] = m.groupdict()["value"]
+        meta["menu_items"] = website.config.menu_items
+    return (meta, markdown)
 
 
 renderer = Renderer()
-inline_lexer = InlineLexer(renderer)
-inline_lexer.enable_math()
-block_lexer = BlockLexer(renderer)
-markdown = mistune.Markdown(renderer, inline=inline_lexer)
+inline = InlineLexer(renderer)
+block = BlockLexer()
+markdown = mistune.Markdown(renderer=renderer, inline=inline, block=block)
