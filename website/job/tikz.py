@@ -8,7 +8,7 @@ import website.job.basic
 backend = "lualatex"
 
 
-class TikzJob(website.job.FileJob):
+class TikzJob(website.job.basic.FileJob):
     def run(self):
         source = self.sources[0]
         if not os.path.exists(source):

@@ -22,6 +22,12 @@ class FileJob(website.jobtree.Job):
     def run(self):
         pass
 
+    def required_jobs(self):
+        jobs = []
+        d = os.path.dirname(self.destination)
+        jobs.append(DirJob(d))
+        return jobs
+
 
 class DirJob(website.jobtree.Job):
     def up_to_date(self):
@@ -30,4 +36,4 @@ class DirJob(website.jobtree.Job):
         return True
 
     def run(self):
-        os.mkdir(self.destination)
+        os.makedirs(self.destination)
