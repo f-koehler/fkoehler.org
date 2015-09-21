@@ -1,8 +1,8 @@
 import mistune
-import re
 import pygments
 import pygments.formatters
 import pygments.lexers
+import re
 
 import website.job
 
@@ -12,7 +12,7 @@ regex_meta_line = re.compile(r"(?P<key>[^\:]+)\s*\:\s*(?P<value>.+)")
 
 
 class InlineGrammar(mistune.InlineGrammar):
-    math = re.compile(r"^\$\$(.+?)\$\$", re.DOTALL)
+    math = re.compile(r"(.*)\$\$(.+?)\$\$", re.DOTALL)
     block_math = re.compile(r"^\\\[(.+?)\\\]", re.DOTALL)
 
 
@@ -21,14 +21,17 @@ class BlockGrammar(mistune.BlockGrammar):
 
 
 class InlineLexer(mistune.InlineLexer):
-    default_rules = ["block_math", "math"] + mistune.InlineLexer.default_rules
+    default_rules = ["math", "block_math"] + mistune.InlineLexer.default_rules
 
     def __init__(self, renderer, **kwargs):
         rules = InlineGrammar()
         super(InlineLexer, self).__init__(renderer, rules, **kwargs)
 
     def output_math(self, m):
-        return self.renderer.inline_math(m.group(1))
+        print("This sucks:")
+        print(m.group(1))
+        exit()
+        return self.renderer.inline_math(m.group(2))
 
     def output_block_math(self, m):
         return self.renderer.block_math(m.group(1))
@@ -52,8 +55,8 @@ class Renderer(mistune.Renderer):
     def block_math(self, math):
         return "\\[%s\\]" % math
 
-    def inline_math(self, math):
-        return "@@%s@@" % math
+    def inline_math(self, text):
+        return "$$%s$$" % text
 
 
 class Markdown(mistune.Markdown):
@@ -87,4 +90,4 @@ def extract_meta_data(markdown):
 renderer = Renderer()
 inline = InlineLexer(renderer)
 block = BlockLexer()
-markdown = mistune.Markdown(renderer=renderer, inline=inline, block=block)
+markdown = Markdown()
