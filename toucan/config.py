@@ -25,3 +25,8 @@ search_paths = [
     "computer",
     "physics"
 ]
+
+extra_files = [
+    "index.md",
+    "404.md"
+]

@@ -1,7 +1,10 @@
-import website.job.basic
+import os.path
+
+import toucan.job.basic
+import toucan.config
 
 
-class CssJob(website.job.basic.FileJob):
+class CssJob(toucan.job.basic.FileJob):
     def run(self):
         css = ""
         for src in self.sources:
@@ -12,5 +15,6 @@ class CssJob(website.job.basic.FileJob):
 
     @staticmethod
     def create(files):
-        j = CssJob(files)
+        p = os.path.join(toucan.config.build_dir, "page.css")
+        j = CssJob(p, files)
         return j.required_jobs()+[j]

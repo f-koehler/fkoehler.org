@@ -23,6 +23,22 @@ def generate_jobs(path):
     return jobs
 
 
+def generate_extra_jobs():
+    files = dict()
+    for f in toucan.config.extra_files:
+        _, ext = os.path.splitext(f)
+        if ext not in files:
+            files[ext] = [f]
+        else:
+            files[ext].append(f)
+
+    jobs = []
+    for ext, fs in files:
+        jobs += toucan.config.job_map[ext](files[ext])
+
+    return jobs
+
+
 def create_tree():
     j = toucan.job.basic.DirJob(toucan.config.build_dir)
     tree = toucan.jobtree.JobTree(j)
@@ -30,6 +46,10 @@ def create_tree():
         jobs = generate_jobs(p)
         for j in jobs:
             tree.insert(j)
+
+    jobs = generate_extra_jobs()
+    for j in jobs:
+        tree.insert(j)
     return tree
 
 # import logging
