@@ -10,3 +10,12 @@ class MarkdownJob(website.job.basic.FileJob):
         html = website.markdown.markdown.render(md)
         with open(self.destination, "w") as f:
             f.write(html)
+
+    @staticmethod
+    def create(files):
+        jobs = []
+        for f in files:
+            j = MarkdownJob(f)
+            jobs += j.required_jobs()
+            jobs.append(j)
+        return jobs

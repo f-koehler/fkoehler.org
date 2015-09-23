@@ -9,3 +9,8 @@ class CssJob(website.job.basic.FileJob):
                 css.append(f.read(src))
         with open(self.destination) as f:
             f.write(css)
+
+    @staticmethod
+    def create(files):
+        j = CssJob(files)
+        return j.required_jobs()+[j]

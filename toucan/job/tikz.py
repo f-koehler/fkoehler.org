@@ -30,3 +30,12 @@ class TikzJob(website.job.basic.FileJob):
             self.destination
         ])
         shutil.rmtree(tmpdir)
+
+    @staticmethod
+    def create(files):
+        jobs = []
+        for f in files:
+            j = TikzJob(f)
+            jobs += j.required_jobs()
+            jobs.append(j)
+        return jobs

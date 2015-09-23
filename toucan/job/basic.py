@@ -5,7 +5,7 @@ import website.jobtree
 
 class FileJob(website.jobtree.Job):
     def __init__(self, destination, sources=[]):
-        self.destination = destination
+        super(self.__class__, self).__init__(destination)
         self.sources = sources
 
     def up_to_date(self):
@@ -30,6 +30,9 @@ class FileJob(website.jobtree.Job):
 
 
 class DirJob(website.jobtree.Job):
+    def __init__(self, destination):
+        super(self.__class__, self).__init__(destination)
+
     def up_to_date(self):
         if os.path.exists(self.destination):
             return False
